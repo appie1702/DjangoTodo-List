@@ -1,0 +1,79 @@
+{% extends 'todo_list/todo_base.html' %}
+{%load crispy_forms_tags %}
+{% block title %}
+Your List
+{% endblock %}
+
+{% block content %}
+<div class="container" id="number1">
+    <h2>ADD YOUR TODO ITEM</h2>
+    {% if form.errors %}
+    {% for field in form %}
+    {% for error in field.errors %}
+    <div class="alert alert-danger">
+        <strong>{{ error|escape }}</strong>
+    </div>
+    {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+    <div class="alert alert-danger">
+        <strong>{{ error|escape }}</strong>
+    </div>
+    {% endfor %}
+    {% endif %}
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <input type="submit" value="Add">
+    </form>
+</div>
+<br>
+<div class="container" id="number2">
+    <h2>Your Todo List</h2>
+    {% if object_list %}
+    <table class="table table-striped table-dark">
+        <thead>
+        <tr>
+            <th scope="col">Todo list</th>
+            <th scope="col">Title</th>
+            <th scope="col">Description</th>
+            <th scope="col">Created At</th>
+            <th scope="col">More Options</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for todo in object_list %}
+        <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ todo.title }}</td>
+            <td>{{ todo.desc }}</td>
+            <td>{{ todo.created_at }}</td>
+            <td>
+                <a href="{% url 'todo_list:todo_update' pk=todo.id %}  " type="button"
+                   class="btn btn-outline-light btn-sm">Update</a>
+                <a href="{% url 'todo_list:todo_delete' pk=todo.id %}" type="button"
+                   class="btn btn-outline-light btn-sm">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <div class="alert alert-dark" role="alert">
+            Add Your First Todo Item!!!
+        </div>
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+
+
+<style>
+      #number1,#number2 {
+            margin-left: 10vh;
+            margin-right:10vh;
+      }
+
+
+
+
+</style>
+{% endblock %}
